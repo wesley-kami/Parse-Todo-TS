@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { todoSchema, type TodoType } from '../schemas/todo.schema';
+import { useTodo } from '../api/useTodo';
 
 const CreateTodo = () => {
   const [show, setShow] = useState(false);
@@ -16,17 +17,11 @@ const CreateTodo = () => {
     resolver: zodResolver(todoSchema)
   });
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+  const { create: { mutate } } = useTodo();
 
-    const onSubmit: SubmitHandler<TodoType> = (todoFormData) => {
-        try{
-          console.log(todoFormData);
+    const onSubmit: SubmitHandler<TodoType> = async (todoFormData) => {
+          await mutate(todoFormData);
           reset();
-        }catch(error: any){
-          console.log(error);
-        }
     } 
 
   return (
