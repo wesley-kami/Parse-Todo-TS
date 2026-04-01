@@ -25,12 +25,10 @@ export const useTodo = () => {
         onError: (error) => setError(error)
     });
 
-    const fetchAll = () => {
-        return useQuery({
-            queryFn: getTodos,
-            queryKey: ['todos'],
-        });
-    }
+    const fetchAll =  useQuery({
+        queryFn: getTodos,
+        queryKey: ['todos'],
+    });
 
     return { error, create, fetchAll };
 }
