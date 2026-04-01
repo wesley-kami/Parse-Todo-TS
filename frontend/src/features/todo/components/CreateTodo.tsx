@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -12,12 +12,21 @@ const CreateTodo = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(todoSchema)
   });
 
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+
     const onSubmit: SubmitHandler<TodoType> = (todoFormData) => {
-        console.log(todoFormData);
+        try{
+          console.log(todoFormData);
+          reset();
+        }catch(error: any){
+          console.log(error);
+        }
     } 
 
   return (
@@ -35,11 +44,12 @@ const CreateTodo = () => {
             <Form.Group className="mb-3" controlId="title">
               <Form.Label>Title</Form.Label>
               <Form.Control
-                {...register("title")}
                 type="text"
                 placeholder="Workout"
                 autoFocus
+                {...register("title")}
               />
+              <span>{errors?.title?.message}</span>
             </Form.Group>
             <Form.Group
               className="mb-3"
@@ -47,31 +57,31 @@ const CreateTodo = () => {
             >
               <Form.Label>Example textarea</Form.Label>
               <Form.Control 
-                as="textarea" 
+                as="textarea"
                 rows={3}
                 {...register('description')}
                 />
+                <span>{errors?.description?.message}</span>
             </Form.Group>
             <Form.Select
                 aria-label="Default select example" 
                 {...register("status")}
             >
-                <option>Status</option>
+                <option disabled>Status</option>
                 <option value="On-hold">On hold</option>
                 <option value="In-progress">In progress</option>
                 <option value="Done">Done</option>
             </Form.Select>
-            <button type='submit'>save</button>
+            <Button variant="primary" type='submit'>
+              Save Changes
+            </Button>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" type='submit' onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
       </Modal>
     </>
   );

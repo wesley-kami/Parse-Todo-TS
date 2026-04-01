@@ -1,6 +1,5 @@
 import { Container } from "react-bootstrap";
 import CreateTodo from "./features/todo/components/CreateTodo"
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
