@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <Container className="mb-4">
-        <CreateTodo />
+        <CreateTodo isVisible={false} />
         <Todos />
       </Container>
     </>

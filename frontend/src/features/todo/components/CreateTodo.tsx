@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -7,7 +7,11 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { todoSchema, type TodoType } from '../schemas/todo.schema';
 import { useTodo } from '../api/useTodo';
 
-const CreateTodo = () => {
+interface TodoForm {
+  isVisible: boolean
+}
+
+const CreateTodo = ({ isVisible }: TodoForm ) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -16,6 +20,10 @@ const CreateTodo = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(todoSchema)
   });
+
+  useEffect(() => {
+    isVisible ? handleShow() : handleClose();
+  }, [isVisible])
 
   const { create: { mutate } } = useTodo();
 
